@@ -9,6 +9,7 @@ function Tank() {
     this.downPressed = false;
     this.movement = false;
     this.armorActivity = {};
+    this.lastShotTS = 0;
 }
 
 Tank.prototype.setProfile = function (profile) {
@@ -97,46 +98,6 @@ Tank.prototype.turn = function (x, y) {
     }
 };
 
-Tank.prototype.squareLocation = function(x, y){
-    var getSq = function(xx, yy){
-      var dep = (xx - xx % canvas.cellSize) / canvas.cellSize + 1;
-      var sq = (((yy - yy % canvas.cellSize) / canvas.cellSize + 1) * canvas.cellCols) - (canvas.cellCols - dep);
-      return sq;
-    }
-    var sqArr = [
-      getSq(x, y), // left top
-      getSq(x + (this.z - 1), y), // right top
-      getSq(x, y + (this.z - 1)), // left bottom
-      getSq(x + (this.z - 1), y + (this.z - 1)), // right bottom
-      getSq(x + Math.floor((this.z - 1)/2), y), // top
-      getSq(x, y + Math.floor((this.z - 1)/2)), // left
-      getSq(x + (this.z - 1), y + Math.floor((this.z - 1)/2)), // right
-      getSq(x + Math.floor((this.z - 1)/2), y + (this.z - 1)) // bottom
-    ];
-
-    sqUniq = [];
-    var sqUniq = sqArr.filter(function(value, index, self){
-      return self.indexOf(value) === index;
-    });
-    return sqUniq;
-};
-
-Tank.prototype.collisionDetection = function(x, y, byArmor) {
-    var sqs = this.squareLocation(x, y);
-    var collision = false;
-    for (var i=0; i < sqs.length; i++) {
-      if (typeof canvas.mapItems[sqs[i]] !== "undefined") {
-        if (byArmor) {
-          console.log("I got shot!: " + sqs[i])
-          canvas.map.splice(canvas.map.indexOf(sqs[i]), 1)
-        }
-        collision = true;
-        break;
-      }
-    }
-    return collision;
-}
-
 Tank.prototype.tanksCollision = function(ownX, ownY, mySize, alianSize) {
 
     var collision = false;
@@ -157,19 +118,19 @@ Tank.prototype.tanksCollision = function(ownX, ownY, mySize, alianSize) {
 
 Tank.prototype.move = function () {
     if (this.rightPressed && this.x < canvas.width - this.z) {
-        if(!this.tanksCollision(this.x + this.step, this.y) && !this.collisionDetection(this.x + this.step, this.y)) {
+        if(!this.tanksCollision(this.x + this.step, this.y) && !canvas.collisionDetection(this.x + this.step, this.y, this.z)) {
             this.x += this.step;
         }
     } else if (this.leftPressed && this.x > 0) {
-        if(!this.tanksCollision(this.x - this.step, this.y) && !this.collisionDetection(this.x - this.step, this.y)) {
+        if(!this.tanksCollision(this.x - this.step, this.y) && !canvas.collisionDetection(this.x - this.step, this.y, this.z)) {
             this.x -= this.step;
         }
     } else if (this.upPressed && this.y > 0) {
-        if(!this.tanksCollision(this.x, this.y - this.step) && !this.collisionDetection(this.x, this.y - this.step)) {
+        if(!this.tanksCollision(this.x, this.y - this.step) && !canvas.collisionDetection(this.x, this.y - this.step, this.z)) {
             this.y -= this.step;
         }
     } else if (this.downPressed && this.y < canvas.height - this.z) {
-        if(!this.tanksCollision(this.x, this.y + this.step) && !this.collisionDetection(this.x, this.y + this.step)) {
+        if(!this.tanksCollision(this.x, this.y + this.step) && !canvas.collisionDetection(this.x, this.y + this.step, this.z)) {
             this.y += this.step;
         }
     }
@@ -211,6 +172,9 @@ Tank.prototype.fire = function () {
       centerY = this.y + this.z / 2;
   }
   var ts = new Date * 1;
-  this.armorActivity[ts] = new Armor(this, centerX, centerY, ts);
+  if (this.lastShotTS + 500 <= ts) {
+    this.armorActivity[ts] = new Armor(this, centerX, centerY, ts);
+    this.lastShotTS = ts;
+  }
 
 }

@@ -18,7 +18,7 @@ function Canvas(id) {
 
     this.cellCols = this.width / this.cellSize;
     this.cellRows = this.height / this.cellSize;
-    this.map = [32, 33, 45, 125, 74, 36, 110, 116, 117, 119, 1, 61, 12, 84, 144, 133, 14];
+    this.map = [32, 45, 125, 74, 36, 110, 128, 116, 117, 119, 1, 640, 609, 61, 12, 84, 144, 133, 14];
 }
 
 Canvas.prototype.drawGrid = function () {
@@ -55,18 +55,63 @@ Canvas.prototype.drawMap = function () {
       self.mapItems[sq] = {};
       sq = sq * 1;
       var preX = (sq % self.cellCols == 0) ? (self.cellCols -1) : (sq % self.cellCols - 1);
-      var preY = (sq % self.cellRows == 0) ? (sq / self.cellRows - 1) :  Math.floor(sq / self.cellCols);
+      var preY = (sq % self.cellCols == 0) ? (sq / self.cellCols - 1) :  Math.floor(sq / self.cellCols);
       var x = preX * self.cellSize;
       var y = preY * self.cellSize;
       ctx.beginPath();
       ctx.rect(x,y, self.cellSize, self.cellSize);
       ctx.fillStyle = "brown";
       ctx.fill();
-      //ctx.strokeStyle = "red";
-      //ctx.stroke();
-      //ctx.font = "10px Arial";
-      //ctx.fillStyle = 'yellow';
-      //ctx.fillText(sq, x + 5,y + 15);
-      ctx.closePath();
+      if (debug) {
+        ctx.font = "10px Arial";
+        ctx.fillStyle = 'yellow';
+        ctx.fillText(sq, x + 5,y + 15);
+        ctx.closePath();
+      }
   });
 };
+
+/*
+ * Defines square region(s) on the map which affects the target item
+ */
+Canvas.prototype.squareLocation = function(x, y, itemSize){
+    var self = this;
+    var getSq = function(xx, yy){
+      var dep = (xx - xx % self.cellSize) / self.cellSize + 1;
+      var sq = (((yy - yy % self.cellSize) / self.cellSize + 1) * self.cellCols) - (self.cellCols - dep);
+      return sq;
+    }
+    // set of squares that item may cover/affect
+    var sqArr = [
+      getSq(x, y), // left top
+      getSq(x + (itemSize - 1), y), // right top
+      getSq(x, y + (itemSize - 1)), // left bottom
+      getSq(x + (itemSize - 1), y + (itemSize - 1)), // right bottom
+      getSq(x + Math.floor((itemSize - 1)/2), y), // top
+      getSq(x, y + Math.floor((itemSize - 1)/2)), // left
+      getSq(x + (itemSize - 1), y + Math.floor((itemSize - 1)/2)), // right
+      getSq(x + Math.floor((itemSize - 1)/2), y + (itemSize - 1)) // bottom
+    ];
+
+    sqUniq = [];
+    var sqUniq = sqArr.filter(function(value, index, self){
+      return self.indexOf(value) === index;
+    });
+    return sqUniq;
+};
+
+Canvas.prototype.collisionDetection = function(x, y, itemSize, byArmor) {
+    var sqs = this.squareLocation(x, y, itemSize);
+    var collision = false;
+    for (var i=0; i < sqs.length; i++) {
+      if (typeof this.mapItems[sqs[i]] !== "undefined") {
+        if (byArmor) {
+          console.log("I got shot!: " + sqs[i])
+          this.map.splice(this.map.indexOf(sqs[i]), 1)
+        }
+        collision = true;
+        break;
+      }
+    }
+    return collision;
+}

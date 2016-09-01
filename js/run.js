@@ -1,5 +1,5 @@
 /* RUN */
-
+var debug = false;
 var canvas = new Canvas("myCanvas");
 var profiles = new Profiles();
 var shareLocation = {};
@@ -13,7 +13,9 @@ t2.events();
 
 setInterval(function () {
     canvas.clear();
-    //canvas.drawGrid();
+    if (debug) {
+      canvas.drawGrid();
+    }
     canvas.drawMap();
     t1.armed();
     t2.armed();

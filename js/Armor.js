@@ -40,7 +40,7 @@ Armor.prototype.checkCollision = function () {
     delete this.parent.armorActivity[this.id];
     return true;
   }
-  if (this.parent.collisionDetection(this.x, this.y, true)) {
+  if (canvas.collisionDetection(this.x, this.y, this.radius, true)) {
     delete this.parent.armorActivity[this.id];
     return true;
   }
