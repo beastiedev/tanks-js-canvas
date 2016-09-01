@@ -2,7 +2,7 @@
 var debug = false;
 var canvas = new Canvas("myCanvas");
 var profiles = new Profiles();
-var shareLocation = {};
+var sharedData = {};
 
 var t1 = new Tank();
 var t2 = new Tank();

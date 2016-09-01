@@ -20,17 +20,27 @@ Tank.prototype.setProfile = function (profile) {
     this.y = p.startY;
     this.moveDir = p.moveDir;
     this.id = profile;
+    this.alienId = (this.id == 1) ? 2 : 1;
     this.color = p.color;
-    shareLocation[this.id] = {x: this.x, y: this.y};
+    sharedData[this.id] = {
+      location:{x: this.x, y: this.y},
+      damage: 0
+    };
     this.img = document.getElementById(p.skin);
 };
 
 Tank.prototype.draw = function () {
+  if (sharedData[this.id].damage >= 3) {
+    return;
+  }
   canvas.context.beginPath();
   canvas.context.rect(this.x,this.y, this.z, this.z);
-  //canvas.context.strokeStyle = this.color;
-  //canvas.context.stroke();
-  this.turn(this.x, this.y);
+  if (debug) {
+    canvas.context.strokeStyle = this.color;
+    canvas.context.stroke();
+  } else {
+    this.turn(this.x, this.y);
+  }
   canvas.context.closePath();
 };
 
@@ -103,9 +113,8 @@ Tank.prototype.tanksCollision = function(ownX, ownY, mySize, alianSize) {
     var collision = false;
     var mySize = mySize || (this.z);
     var alianSize = alianSize || (this.z);
-    var slIndex = this.id == 1 ? 2 : 1;
-    var x = shareLocation[slIndex].x;
-    var y = shareLocation[slIndex].y;
+    var x = sharedData[this.alienId].location.x;
+    var y = sharedData[this.alienId].location.y;
     if (
         (y <= (ownY + mySize) && (y + alianSize) >= ownY)
           &&
@@ -134,7 +143,7 @@ Tank.prototype.move = function () {
             this.y += this.step;
         }
     }
-    shareLocation[this.id] = {x: this.x, y: this.y};
+    sharedData[this.id].location = {x: this.x, y: this.y};
     this.draw(this.x, this.y);
     return this;
 };

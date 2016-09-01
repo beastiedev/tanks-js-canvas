@@ -36,7 +36,7 @@ Armor.prototype.release = function () {
 }
 Armor.prototype.checkCollision = function () {
   if (this.parent.tanksCollision(this.x, this.y, this.radius)) {
-    console.log("BOOOOOOOOOOOM!")
+    sharedData[this.parent.alienId].damage++;
     delete this.parent.armorActivity[this.id];
     return true;
   }
