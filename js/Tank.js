@@ -27,12 +27,13 @@ Tank.prototype.setProfile = function (profile) {
       damage: 0
     };
     this.img = document.getElementById(p.skin);
+    return this;
 };
 
 Tank.prototype.draw = function () {
-  if (sharedData[this.id].damage >= 3) {
+  /*if (sharedData[this.id].damage >= 3) {
     return;
-  }
+  }*/
   canvas.context.beginPath();
   canvas.context.rect(this.x,this.y, this.z, this.z);
   if (debug) {
@@ -111,6 +112,9 @@ Tank.prototype.turn = function (x, y) {
 Tank.prototype.tanksCollision = function(ownX, ownY, mySize, alianSize) {
 
     var collision = false;
+    if (!sharedData[this.alienId]) {
+      return collision;
+    }
     var mySize = mySize || (this.z);
     var alianSize = alianSize || (this.z);
     var x = sharedData[this.alienId].location.x;
@@ -185,5 +189,9 @@ Tank.prototype.fire = function () {
     this.armorActivity[ts] = new Armor(this, centerX, centerY, ts);
     this.lastShotTS = ts;
   }
+
+}
+
+Tank.prototype.destroy = function(){
 
 }

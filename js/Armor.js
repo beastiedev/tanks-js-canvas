@@ -37,6 +37,13 @@ Armor.prototype.release = function () {
 Armor.prototype.checkCollision = function () {
   if (this.parent.tanksCollision(this.x, this.y, this.radius)) {
     sharedData[this.parent.alienId].damage++;
+    if (sharedData[this.parent.alienId].damage >= 3) {
+
+      tanks["t" + this.parent.alienId] = null;
+      delete sharedData[this.parent.alienId];
+      delete tanks["t" + this.parent.alienId];
+      game.stop();
+    }
     delete this.parent.armorActivity[this.id];
     return true;
   }

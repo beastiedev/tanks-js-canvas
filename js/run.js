@@ -1,24 +1,40 @@
 /* RUN */
 var debug = false;
+var tanks = {};
 var canvas = new Canvas("myCanvas");
 var profiles = new Profiles();
 var sharedData = {};
+var game = new Game();
 
-var t1 = new Tank();
-var t2 = new Tank();
-t1.setProfile(1);
-t2.setProfile(2);
-t1.events();
-t2.events();
+function Game() {
+  this.start = function(){
+    this.mainLoop = setInterval(function () {
+        canvas.clear();
+        if (debug) {
+          canvas.drawGrid();
+        }
+        canvas.drawMap();
+        for (var t in tanks) {
+          tanks[t].armed();
+          tanks[t].move();
+        }
+    }, 50);
+  };
+  this.stop = function(){
+    console.log("Game Over!");
+    setTimeout(function(){
+      clearInterval(game.mainLoop);
+    }, 500);
+  }
+}
 
-setInterval(function () {
-    canvas.clear();
-    if (debug) {
-      canvas.drawGrid();
-    }
-    canvas.drawMap();
-    t1.armed();
-    t2.armed();
-    t1.move();
-    t2.move();
-}, 50);
+(function factory() {
+  for (var proto in profiles.get) {
+    console.log(profiles.get[proto])
+    var t = new Tank();
+    t.setProfile(proto).events();
+    tanks["t" + proto] = t;
+  }
+})()
+
+game.start();
