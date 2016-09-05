@@ -10,6 +10,7 @@ function Game() {
     return this;
   };
   this.start = function(){
+    logStat("Game Started!")
     this.mainLoop = setInterval(function () {
         canvas.clear();
         if (debug) {
@@ -23,9 +24,9 @@ function Game() {
     }, 50);
   };
   this.stop = function(){
-    console.log("Game Over!");
     setTimeout(function(){
       clearInterval(game.mainLoop);
+      logStat("Game Over! (press F5)")
     }, 500);
   }
 }

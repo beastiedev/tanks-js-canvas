@@ -67,6 +67,7 @@ Armor.prototype.checkCollision = function () {
   if (this.parent.tanksCollision(this.x, this.y, this.radius)) {
     this.drawFlash(this.x, this.y, "black");
     sharedData[this.parent.alienId].damage++;
+    logStat("Tank '" + tanks["t" + this.parent.alienId].color + "' got damage " + sharedData[this.parent.alienId].damage + " of 3")
     if (sharedData[this.parent.alienId].damage >= 3) {
 
       tanks["t" + this.parent.alienId] = null;

@@ -5,9 +5,15 @@
 canvas {
     background: #ccc;
     display: block;
-    margin: 50px auto;
+    margin: 50px auto 30px;
     //width: 100px;
     //height: 100px;
+}
+#log {
+  height: 20px;
+  text-align: center;
+  font-size: 10px;
+  font-family: monospace;
 }
 .preload {
     display:none;
