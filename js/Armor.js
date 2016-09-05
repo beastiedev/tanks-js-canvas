@@ -34,8 +34,38 @@ Armor.prototype.release = function () {
   }
   this.draw();
 }
+
+Armor.prototype.armorCollision = function(ownX, ownY) {
+
+    var collision = false;
+    if (!tanks["t" + this.parent.alienId]) {
+      return collision;
+    }
+
+    for (var armId in tanks["t" + this.parent.alienId].armorActivity) {
+      var x = tanks["t" + this.parent.alienId].armorActivity[armId].x;
+      var y = tanks["t" + this.parent.alienId].armorActivity[armId].y;
+      if (
+          (y <= (ownY + this.radius) && (y + this.radius) >= ownY)
+            &&
+          (x <= (ownX + this.radius) && (x + this.radius) >= ownX)
+        ) {
+          delete tanks["t" + this.parent.alienId].armorActivity[armId];
+          collision = true;
+          this.drawFlash(x, y, "orange");
+      }
+    }
+
+    return collision;
+}
+
 Armor.prototype.checkCollision = function () {
+  if (this.armorCollision(this.x, this.y)) {
+    delete this.parent.armorActivity[this.id];
+    return true;
+  }
   if (this.parent.tanksCollision(this.x, this.y, this.radius)) {
+    this.drawFlash(this.x, this.y, "black");
     sharedData[this.parent.alienId].damage++;
     if (sharedData[this.parent.alienId].damage >= 3) {
 
@@ -68,6 +98,14 @@ Armor.prototype.draw = function () {
   canvas.context.beginPath();
   canvas.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   canvas.context.fillStyle = this.color;
+  canvas.context.fill();
+  canvas.context.closePath();
+}
+
+Armor.prototype.drawFlash = function (x, y, color) {
+  canvas.context.beginPath();
+  canvas.context.arc(x, y, 15, 0, 2 * Math.PI, false);
+  canvas.context.fillStyle = color;
   canvas.context.fill();
   canvas.context.closePath();
 }

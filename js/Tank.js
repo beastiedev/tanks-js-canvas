@@ -167,7 +167,6 @@ Tank.prototype.armed = function () {
 
 Tank.prototype.fire = function () {
 
-  //console.log("Tank " + this.id + " fired! (from " + this.moveDir + ")")
   var centerX, centerY;
   switch(this.moveDir) {
     case "up":
