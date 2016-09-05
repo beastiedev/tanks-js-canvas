@@ -1,6 +1,6 @@
-/* profiles */
+/* profile */
 
-function Profiles() {
+function Profile() {
     this.size = 50;
     this.get = {
         2: {

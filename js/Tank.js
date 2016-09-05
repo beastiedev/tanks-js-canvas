@@ -10,16 +10,17 @@ function Tank() {
     this.movement = false;
     this.armorActivity = {};
     this.lastShotTS = 0;
+    this.skinOriginSize = 50;
 }
 
-Tank.prototype.setProfile = function (profile) {
-    var p = profiles.get[profile];
+Tank.prototype.setProfile = function (profileId) {
+    var p = profile.get[profileId];
     this.keys = p.keys;
     this.z = p.size;
     this.x = p.startX;
     this.y = p.startY;
     this.moveDir = p.moveDir;
-    this.id = profile;
+    this.id = profileId;
     this.alienId = (this.id == 1) ? 2 : 1;
     this.color = p.color;
     sharedData[this.id] = {
@@ -97,15 +98,16 @@ Tank.prototype.events = function () {
 
 Tank.prototype.turn = function (x, y) {
     var z = this.z;
+    var s = this.skinOriginSize;
     switch (this.moveDir) {
         case "up":
-            return this.ctx.drawImage(this.img, 0, 0, z, z, x, y, z, z);
+            return this.ctx.drawImage(this.img, 0, 0, s, s, x, y, z, z);
         case "down":
-            return this.ctx.drawImage(this.img, z, 0, z, z, x, y, z, z);
+            return this.ctx.drawImage(this.img, s, 0, s, s, x, y, z, z);
         case "left":
-            return this.ctx.drawImage(this.img, 0, z, z, z, x, y, z, z);
+            return this.ctx.drawImage(this.img, 0, s, s, s, x, y, z, z);
         default: // right
-            return this.ctx.drawImage(this.img, z, z, z, z, x, y, z, z);
+            return this.ctx.drawImage(this.img, s, s, s, s, x, y, z, z);
     }
 };
 
