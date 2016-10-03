@@ -18,7 +18,24 @@ function Canvas(id) {
 
     this.cellCols = this.width / this.cellSize;
     this.cellRows = this.height / this.cellSize;
-    this.map = [32, 45, 125, 74, 36, 110, 128, 116, 117, 119, 1, 640, 609, 61, 12, 84, 144, 133, 14];
+    //this.map = [32, 45, 125, 74, 36, 110, 128, 116, 117, 119, 1, 640, 609, 61, 12, 84, 144, 133, 14];
+    this.map = {
+        "32": {
+          type: "ground"
+        },
+        "45": {
+          type: "concrete"
+        },
+        "125": {
+          type: "rock"
+        },
+        "144": {
+          type: "sand"
+        },
+        "74": {
+          type: "trees"
+        }
+    };
 }
 
 Canvas.prototype.drawGrid = function () {
@@ -47,12 +64,20 @@ Canvas.prototype.clear = function () {
     this.context.clearRect(0, 0, this.width, this.height);
 };
 
+Canvas.prototype.textureMap = {
+  "ground": "brown",
+  "concrete": "slategrey",
+  "rock": "DimGray",
+  "sand": "wheat",
+  "trees": "green"
+}
+
 Canvas.prototype.drawMap = function () {
   var ctx = this.context;
   var self = this;
   this.mapItems = {};
-  this.map.forEach(function(sq){
-      self.mapItems[sq] = {};
+  for (var sq in this.map) {
+      self.mapItems[sq] = this.map[sq];
       sq = sq * 1;
       var preX = (sq % self.cellCols == 0) ? (self.cellCols -1) : (sq % self.cellCols - 1);
       var preY = (sq % self.cellCols == 0) ? (sq / self.cellCols - 1) :  Math.floor(sq / self.cellCols);
@@ -61,6 +86,7 @@ Canvas.prototype.drawMap = function () {
       ctx.beginPath();
       ctx.rect(x,y, self.cellSize, self.cellSize);
       ctx.fillStyle = "brown";
+      ctx.fillStyle = this.textureMap[this.map[sq].type];
       ctx.fill();
       if (debug) {
         ctx.font = "10px Arial";
@@ -68,7 +94,7 @@ Canvas.prototype.drawMap = function () {
         ctx.fillText(sq, x + 5,y + 15);
         ctx.closePath();
       }
-  });
+  }
 };
 
 /*
@@ -107,7 +133,10 @@ Canvas.prototype.collisionDetection = function(x, y, itemSize, byArmor) {
       if (typeof this.mapItems[sqs[i]] !== "undefined") {
         if (byArmor) {
           console.log("I got shot!: " + sqs[i])
-          this.map.splice(this.map.indexOf(sqs[i]), 1)
+          //this.map.splice(this.map.indexOf(sqs[i]), 1)
+          console.log(this.mapItems[sqs[i]])
+          delete this.map[sqs[i]];
+          console.log(this.mapItems)
         }
         collision = true;
         break;
