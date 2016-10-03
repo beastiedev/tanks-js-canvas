@@ -50,23 +50,34 @@ Tank.prototype.events = function () {
 
     var self = this;
 
+    function clearMovementKeys() {
+      self.rightPressed = false;
+      self.leftPressed = false;
+      self.upPressed = false;
+      self.downPressed = false;
+    }
+
     function keyDownHandler(e) {
         if (e.keyCode == self.keys.right) { // right
+            clearMovementKeys();
             self.moveDir = "right";
             self.rightPressed = true;
             self.movement = true;
 
         } else if (e.keyCode == self.keys.left) { // left
+            clearMovementKeys();
             self.moveDir = "left";
             self.leftPressed = true;
             self.movement = true;
 
         } else if (e.keyCode == self.keys.up) { // up
+            clearMovementKeys();
             self.moveDir = "up";
             self.upPressed = true;
             self.movement = true;
 
         } else if (e.keyCode == self.keys.down) { // down
+            clearMovementKeys();
             self.moveDir = "down";
             self.downPressed = true;
             self.movement = true;
@@ -81,19 +92,20 @@ Tank.prototype.events = function () {
             self.movement = false;
             self.rightPressed = false;
         } else if (e.keyCode == self.keys.left) { // left
-          self.movement = false;
+            self.movement = false;
             self.leftPressed = false;
         } else if (e.keyCode == self.keys.up) { // up
-          self.movement = false;
+            self.movement = false;
             self.upPressed = false;
         } else if (e.keyCode == self.keys.down) { // down
-          self.movement = false;
+            self.movement = false;
             self.downPressed = false;
         }
     }
 
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
+    return this;
 };
 
 Tank.prototype.turn = function (x, y) {

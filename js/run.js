@@ -9,7 +9,7 @@ var profile = new Profile();
 
 var game = new Game();
 
-game.init().start();
+game.init();
 
 function logStat(msg) {
   document.getElementById('log').innerText = msg;
