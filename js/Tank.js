@@ -11,6 +11,7 @@ function Tank() {
     this.armorActivity = {};
     this.lastShotTS = 0;
     this.skinOriginSize = 50;
+    this.soundTankMove = new Sound("tank_move");
 }
 
 Tank.prototype.setProfile = function (profileId) {
@@ -63,24 +64,28 @@ Tank.prototype.events = function () {
             self.moveDir = "right";
             self.rightPressed = true;
             self.movement = true;
+            self.soundTankMove.play();
 
         } else if (e.keyCode == self.keys.left) { // left
             clearMovementKeys();
             self.moveDir = "left";
             self.leftPressed = true;
             self.movement = true;
+            self.soundTankMove.play();
 
         } else if (e.keyCode == self.keys.up) { // up
             clearMovementKeys();
             self.moveDir = "up";
             self.upPressed = true;
             self.movement = true;
+            self.soundTankMove.play();
 
         } else if (e.keyCode == self.keys.down) { // down
             clearMovementKeys();
             self.moveDir = "down";
             self.downPressed = true;
             self.movement = true;
+            self.soundTankMove.play();
         } else if (e.keyCode == self.keys.fire) {
           self.fired = true;
           //console.log("Tank " + self.id + " loaded!")
@@ -91,15 +96,19 @@ Tank.prototype.events = function () {
         if (e.keyCode == self.keys.right) { // right
             self.movement = false;
             self.rightPressed = false;
+            self.soundTankMove.stop();
         } else if (e.keyCode == self.keys.left) { // left
             self.movement = false;
             self.leftPressed = false;
+            self.soundTankMove.stop();
         } else if (e.keyCode == self.keys.up) { // up
             self.movement = false;
             self.upPressed = false;
+            self.soundTankMove.stop();
         } else if (e.keyCode == self.keys.down) { // down
             self.movement = false;
             self.downPressed = false;
+            self.soundTankMove.stop();
         }
     }
 
@@ -171,6 +180,7 @@ Tank.prototype.armed = function () {
   }
   if (this.fired) {
     this.fired = false;
+    (new Sound("tank_fire")).play();
     this.fire();
   }
 

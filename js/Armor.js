@@ -104,6 +104,7 @@ Armor.prototype.draw = function () {
 }
 
 Armor.prototype.drawFlash = function (x, y, color) {
+  (new Sound("tank_damage")).play()
   canvas.context.beginPath();
   canvas.context.arc(x, y, 15, 0, 2 * Math.PI, false);
   canvas.context.fillStyle = color;
