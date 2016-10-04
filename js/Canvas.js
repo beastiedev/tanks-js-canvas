@@ -20,13 +20,34 @@ function Canvas(id) {
     this.cellRows = this.height / this.cellSize;
     //this.map = [32, 45, 125, 74, 36, 110, 128, 116, 117, 119, 1, 640, 609, 61, 12, 84, 144, 133, 14];
     this.map = {
-        "32": {
-          type: "ground",
-          hp: 1
-        },
+      "205": {type: "concrete",hp: 5},
+      "206": {type: "concrete",hp: 5},
+      "207": {type: "concrete",hp: 5},
+      "210": {type: "concrete",hp: 5},
+      "211": {type: "concrete",hp: 5},
+      "212": {type: "concrete",hp: 5},
+      "237": {type: "concrete",hp: 5},
+      "269": {type: "concrete",hp: 5},
+      "301": {type: "concrete",hp: 5},
+      "333": {type: "concrete",hp: 5},
+      "365": {type: "concrete",hp: 5},
+      "397": {type: "concrete",hp: 5},
+      "429": {type: "concrete",hp: 5},
+      "430": {type: "concrete",hp: 5},
+      "431": {type: "concrete",hp: 5},
+      "434": {type: "concrete",hp: 5},
+      "435": {type: "concrete",hp: 5},
+      "436": {type: "concrete",hp: 5},
+      "244": {type: "concrete",hp: 5},
+      "276": {type: "concrete",hp: 5},
+      "308": {type: "concrete",hp: 5},
+      "340": {type: "concrete",hp: 5},
+      "372": {type: "concrete",hp: 5},
+      "404": {type: "concrete",hp: 5},
+        "32": {type: "ground",hp: 1},
         "45": {
           type: "concrete",
-          hp: 3
+          hp: 5
         },
         "125": {
           type: "rock",
