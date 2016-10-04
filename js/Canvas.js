@@ -21,19 +21,24 @@ function Canvas(id) {
     //this.map = [32, 45, 125, 74, 36, 110, 128, 116, 117, 119, 1, 640, 609, 61, 12, 84, 144, 133, 14];
     this.map = {
         "32": {
-          type: "ground"
+          type: "ground",
+          hp: 1
         },
         "45": {
-          type: "concrete"
+          type: "concrete",
+          hp: 3
         },
         "125": {
-          type: "rock"
+          type: "rock",
+          hp: 5
         },
         "144": {
-          type: "sand"
+          type: "sand",
+          hp: 0
         },
         "74": {
-          type: "trees"
+          type: "trees",
+          hp: 0
         }
     };
 }
@@ -132,13 +137,15 @@ Canvas.prototype.collisionDetection = function(x, y, itemSize, byArmor) {
     for (var i=0; i < sqs.length; i++) {
       if (typeof this.mapItems[sqs[i]] !== "undefined") {
         if (byArmor) {
+          this.map[sqs[i]].hp--;
           console.log("I got shot!: " + sqs[i])
-          //this.map.splice(this.map.indexOf(sqs[i]), 1)
-          console.log(this.mapItems[sqs[i]])
-          delete this.map[sqs[i]];
-          console.log(this.mapItems)
+          if (this.map[sqs[i]].hp <= 0) {
+            delete this.map[sqs[i]];
+          }
+          collision = true;
+        } else {
+          collision = this.map[sqs[i]].type != "trees";
         }
-        collision = true;
         break;
       }
     }
